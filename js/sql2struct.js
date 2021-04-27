@@ -12,6 +12,7 @@ new Vue({
             useSqlx: true,
             useJson: true,
             useForm: true,
+            useXorm: true,
             dialogFormVisible: false
         }
     },
@@ -29,6 +30,7 @@ new Vue({
                     useSqlx: that.useSqlx,
                     useJson: that.useJson,
                     useForm: that.useForm,
+                    useXorm: that.useXorm,
                     typeMap: that.typeMap
                 }
                 that.setCache(data)
@@ -49,6 +51,9 @@ new Vue({
             }
             if (obj.useForm != undefined) {
                 that.useForm = obj.useForm
+            }
+            if (obj.useXorm != undefined) {
+                that.useXorm = obj.useXorm
             }
             if (obj.typeMap != undefined) {
                 that.typeMap = obj.typeMap
@@ -73,6 +78,7 @@ new Vue({
             var structResult = 'type '
             for (var i = 0, len = res.length; i < len; i++) {
                 var field = res[i].match(/\`(.+)\`\s+(tinyint|smallint|int|mediumint|bigint|float|double|decimal|varchar|char|text|mediumtext|longtext|datetime|time|date|enum|set|blob)?/)
+                console.log(field)
                 if (i == 0) {   // 第一个字段为数据表名称
                     if (field && field[1] != undefined && field[2] == undefined) {
                         var tbName = titleCase(field[1])
@@ -104,6 +110,9 @@ new Vue({
                             if (this.useForm) {
                                 structArr.push('form:"' + fieldJsonName + '"')
                             }
+                            if (this.useXorm) {
+                                structArr.push('xorm:"' + field[2] +"  '"+ fieldJsonName + "'" +'"')
+                            }
                             if (structArr.length > 0) {
                                 structResult += '`'+structArr.join(' ')+'`'
                             }
@@ -133,6 +142,7 @@ new Vue({
                 useSqlx: this.useSqlx,
                 useJson: this.useJson,
                 useForm: this.useForm,
+                useXorm: this.useXorm,
                 typeMap: this.typeMap
             }
             this.setCache(data)
@@ -144,6 +154,7 @@ new Vue({
                 useSqlx: this.useSqlx,
                 useJson: this.useJson,
                 useForm: this.useForm,
+                useXorm: this.useXorm,
                 typeMap: this.typeMap
             }
             this.setCache(data)
@@ -155,6 +166,7 @@ new Vue({
                 useSqlx: this.useSqlx,
                 useJson: this.useJson,
                 useForm: this.useForm,
+                useXorm: this.useXorm,
                 typeMap: this.typeMap
             }
             this.setCache(data)
@@ -166,6 +178,7 @@ new Vue({
                 useSqlx: this.useSqlx,
                 useJson: this.useJson,
                 useForm: this.useForm,
+                useXorm: this.useXorm,
                 typeMap: this.typeMap
             }
             this.setCache(data)
@@ -177,6 +190,19 @@ new Vue({
                 useSqlx: this.useSqlx,
                 useJson: this.useJson,
                 useForm: this.useForm,
+                useXorm: this.useXorm,
+                typeMap: this.typeMap
+            }
+            this.setCache(data)
+        },
+        useXorm(val) {
+            this.useForm = val
+            var data = {
+                useGorm: this.useGorm,
+                useSqlx: this.useSqlx,
+                useJson: this.useJson,
+                useForm: this.useForm,
+                useXorm: this.useXorm,
                 typeMap: this.typeMap
             }
             this.setCache(data)
@@ -229,7 +255,7 @@ function getTypeMap() {
         'time': 'time.Time',
         'date': 'time.Time',
         'datetime': 'time.Time',
-        'timestramp': 'int64',
+        'timestamp': 'int64',
         'enum': 'string',
         'set': 'string',
         'blob': 'string' 
